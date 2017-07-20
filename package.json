@@ -1,5 +1,5 @@
 {
-  "name": "mongo",
+  "name": "plugin-mongo",
   "version": "0.0.1",
   "main": "mongo.js",
   "private": true,
