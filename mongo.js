@@ -1,9 +1,9 @@
 'use strict';
-var mongoose = require('mongoose');
-var assert = require('assert');
-var SchemaBuilder = require('./SchemaBuilder');
+const mongoose = require('mongoose');
+const assert = require('assert');
+const SchemaBuilder = require('./SchemaBuilder');
 
-var Mongo = function () {
+const Mongo = function () {
     this.db = {};//will be filled with model names as keys
     this.connection = null;
 };
@@ -19,7 +19,7 @@ Mongo.prototype = {
      * @param done
      */
     connect: function (serverConfigOptions, done) {
-        var self = this;
+        const self = this;
         assert(serverConfigOptions.mongoUrl, 'connect mongoUrl serverConfigOptions');
         this.db._mongoose = mongoose;
         mongoose.set('debug', serverConfigOptions.mongoose && serverConfigOptions.mongoose.debug);

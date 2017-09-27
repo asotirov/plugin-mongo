@@ -1,33 +1,33 @@
 'use strict';
-var _ = require('lodash');
-var findOneOrCreate = require('mongoose-find-one-or-create');
-var utilities;
+const _ = require('lodash');
+const findOneOrCreate = require('mongoose-find-one-or-create');
+let utilities;
 
 function lowercaseFirstLetter(string) {
     return string.charAt(0).toLowerCase() + string.slice(1);
 }
 
-var SchemaBuilder = {};
+const SchemaBuilder = {};
 SchemaBuilder.initialize = function (opts, imports) {
     utilities = imports.utilities;
 };
 
 SchemaBuilder.buildSingleSchema = function (mongo, name, schema, schemaOptions, setupFunction, major) {
-    var collection = schemaOptions.collection || lowercaseFirstLetter(name);
+    let collection = schemaOptions.collection || lowercaseFirstLetter(name);
     if (major) {
         collection = collection + '.' + major;
         name = name + '.' + major;
     }
-    var options = _.defaults({collection: collection}, schemaOptions);
-    var singleSchema = new mongo.Schema(schema, options);
+    const options = _.defaults({collection: collection}, schemaOptions);
+    const singleSchema = new mongo.Schema(schema, options);
     singleSchema.plugin(findOneOrCreate);
     singleSchema.setTransform = function (transform, clear) {
         if (transform) {
             if (typeof(transform) !== 'function') {
-                var props = transform.concat([]);
+                const props = transform.concat([]);
 
                 transform = function (doc) {
-                    var res = utilities.transformThatObject(doc, props);
+                    let res = utilities.transformThatObject(doc, props);
                     if (clear) {
                         res = utilities.getClearObject(res);
                     }
@@ -63,11 +63,11 @@ SchemaBuilder.build = function (mongo, name, schema, schemaOptions, setupFunctio
 
     schemaOptions = _.extend({}, schemaOptions);
     if (schemaOptions.multiple) {
-        var majors = mongo.db.majors;
+        const majors = mongo.db.majors;
         if (majors.length === 0) {
             throw new Error(name + ' defined as multiple schema, server not configured for majors.');
         }
-        var schemas = {};
+        const schemas = {};
         _.each(majors, function (major) {
             schemas[major] = SchemaBuilder.buildSingleSchema(mongo, name, schema, schemaOptions, setupFunction, major);
         });
@@ -77,7 +77,7 @@ SchemaBuilder.build = function (mongo, name, schema, schemaOptions, setupFunctio
                 if (!major) {
                     throw new Error(major + ' not a valid major for database selection.');
                 }
-                var schema = schemas[major];
+                let schema = schemas[major];
                 if (!schema) {
                     throw new Error(major + ' does not exist as a valid major for database selection.');
                 }
